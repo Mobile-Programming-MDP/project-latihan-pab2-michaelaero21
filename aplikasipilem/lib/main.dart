@@ -3,8 +3,9 @@ import 'package:aplikasipilem/screens/home_screen.dart';
 import 'package:aplikasipilem/screens/search_screen.dart';
 import 'package:aplikasipilem/screens/favorite_screen.dart';
 
-void main() => runApp(const MyApp());
-
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aplikasi Pilem',
+      title: 'Pilem',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
@@ -27,7 +28,7 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  MainScreenState createState() => MainScreenState();
+  State<MainScreen> createState() => MainScreenState();
 }
 
 class MainScreenState extends State<MainScreen> {
@@ -39,11 +40,12 @@ class MainScreenState extends State<MainScreen> {
     const FavoriteScreen(),
   ];
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +55,7 @@ class MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home), 
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -63,7 +65,7 @@ class MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorite',
-          ),
+          )
         ],
       ),
     );

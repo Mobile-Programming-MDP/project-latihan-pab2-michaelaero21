@@ -7,7 +7,7 @@ class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  SearchScreenState createState() => SearchScreenState();
+  State<SearchScreen> createState() => SearchScreenState();
 }
 
 class SearchScreenState extends State<SearchScreen> {
@@ -28,7 +28,7 @@ class SearchScreenState extends State<SearchScreen> {
   }
 
   void _searchMovies() async {
-    if (_searchController.text.isEmpty){
+    if (_searchController.text.isEmpty) {
       setState(() {
         _searchResults.clear();
       });
@@ -37,16 +37,18 @@ class SearchScreenState extends State<SearchScreen> {
 
     final List<Map<String, dynamic>> searchData = await _apiService.searchMovies(_searchController.text);
     
-    setState(() {
-      _searchResults = searchData.map((e) => Movie.fromJson(e)).toList();
-    });
+    if(searchData.isNotEmpty){
+      setState(() {
+        _searchResults = searchData.map((e) => Movie.fromJson(e)).toList();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Screen'),
+        title: const Text('Search'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -58,7 +60,8 @@ class SearchScreenState extends State<SearchScreen> {
                 border: Border.all(
                   color: Colors.grey,
                   width: 1.0,
-                  ),
+                ),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: Row(
                 children: [
@@ -69,24 +72,24 @@ class SearchScreenState extends State<SearchScreen> {
                         hintText: 'Search movies...',
                         border: InputBorder.none,
                       ),
-                    ),
+                    ), 
                   ),
                   Visibility(
                     visible: _searchController.text.isNotEmpty,
                     child: IconButton(
                       icon: const Icon(Icons.clear),
-                      onPressed: (){
+                      onPressed: () {
                         _searchController.clear();
                         setState(() {
                           _searchResults.clear();
                         });
                       },
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 16,),
             Expanded(
               child: ListView.builder(
                 itemCount: _searchResults.length,
@@ -95,28 +98,29 @@ class SearchScreenState extends State<SearchScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: ListTile(
-                      leading: Image.network('https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
+                      leading: Image.network(
+                        'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
                       ),
                       title: Text(movie.title),
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
-                          context,
+                          context, 
                           MaterialPageRoute(
-                            builder: (context) => DetailScreen(movie: movie),
-                          ),
+                            builder: (context) => DetailScreen(movie: movie)
+                          )
                         );
                       },
                     ),
                   );
                 },
               ),
-            ),
+            )
           ],
         ),
-       ),
-      );
-    }
+      ),
+    );
+  }
 }

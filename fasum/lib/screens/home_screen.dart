@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
         .collection("posts")
-        //.orderBy('createdAt', descending: true)
+        .orderBy('createdAt', descending: true)
         .snapshots(), 
         builder: (context, snapshot) {
           if(!snapshot.hasData)
@@ -61,11 +61,11 @@ class HomeScreen extends StatelessWidget {
               final data = posts[index].data();
               final imageBase64 = data['image'];
               final description = data['description'];
-              //final createdAtStrs = data['createdAt'];
+              final createdAtStr = data['createdAt'];
               final fullName = data['fullName']?? 'Anonim';
 
               //parse ke DateTime
-              //final createdAt = DateTime.parse(createdAtStr);
+              final createdAt = DateTime.parse(createdAtStr);
               return Card(
                 margin: const EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(

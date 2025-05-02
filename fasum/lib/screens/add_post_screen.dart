@@ -82,9 +82,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
       setState(() => _isUploading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User not found.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('User not found.')));
       return;
     }
     try {
@@ -108,34 +108,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
       debugPrint('Upload failed: $e');
       if (!mounted) return;
       setState(() => _isUploading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to upload the post.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to upload the post.')));
     }
   }
 
   void _showImageSourceDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Choose Image Source"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _pickImage(ImageSource.camera);
-            },
-            child: Text("Camera"),
+      builder:
+          (context) => AlertDialog(
+            title: Text("Choose Image Source"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+                child: Text("Camera"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+                child: Text("Gallery"),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _pickImage(ImageSource.gallery);
-            },
-            child: Text("Gallery"),
-          ),
-        ],
-      ),
     );
   }
 
@@ -149,21 +150,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
           children: [
             _image != null
                 ? Image.file(
-                    _image!,
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
+                  _image!,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                )
                 : GestureDetector(
-                    onTap: _showImageSourceDialog,
-                    child: Container(
-                      height: 200,
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: Icon(Icons.add_a_photo, size: 50),
-                      ),
-                    ),
+                  onTap: _showImageSourceDialog,
+                  child: Container(
+                    height: 200,
+                    color: Colors.grey[300],
+                    child: Center(child: Icon(Icons.add_a_photo, size: 50)),
                   ),
+                ),
             SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
@@ -178,13 +177,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             _isUploading
                 ? CircularProgressIndicator()
                 : ElevatedButton.icon(
-                    onPressed: _submitPost,
-                    icon: Icon(Icons.upload),
-                    label: Text('Post'),
-                  ),
+                  onPressed: _submitPost,
+                  icon: Icon(Icons.upload),
+                  label: Text('Post'),
+                ),
           ],
         ),
-     ),
+      ),
     );
   }
 }

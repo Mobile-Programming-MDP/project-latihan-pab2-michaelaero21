@@ -1,4 +1,3 @@
-// screens/sign_up_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fasum/screens/sign_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,18 +18,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registrasi Akun'),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Registrasi Akun')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        
         child: Column(
           children: [
-             TextField(
+            TextField(
               controller: _fullNameController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Full Name'),
             ),
             TextField(
               controller: _emailController,
@@ -45,8 +41,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _confirmPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                  labelText:
-                      'Konfirmasi Password'), // Field untuk konfirmasi password
+                labelText: 'Konfirmasi Password',
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 16.0),
@@ -67,40 +63,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Password dan konfirmasi password tidak sama'),
+          content: Text('Password dan Konfirmasi Password Tidak Sama'),
         ),
       );
-    }else{
+    } else {
       try {
         final newUser = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: _emailController.text, 
-            password: _passwordController.text);
-        await FirebaseFirestore.instance
-          .collection("users")
-          .doc(newUser.user!.uid)
-          .set({
-            'fullname':_fullNameController.text, 
-            'email':_emailController.text, 
-            'createdAt':Timestamp.now()});
+            .createUserWithEmailAndPassword(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
 
+        //Simpan Data Pengguna ke Firestore
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(newUser.user!.uid)
+            .set({
+              'fullName': _fullNameController.text.trim(),
+              'email': _emailController.text,
+              'createdAt': Timestamp.now(),
+            });
         if (mounted) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const SignInScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
           );
         }
       } on FirebaseAuthException catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Gagal mendaftar: ${e.message}'),
-            ),
+            SnackBar(content: Text('Gagal Mendaftar : ${e.message}')),
           );
-        };
-      }}
+        }
+      }
     }
+  }
 }
-
-  
